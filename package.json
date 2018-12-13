@@ -1,0 +1,33 @@
+{
+  "name": "simple-react-weather-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:mel-michael/simple-react-weather-app.git",
+  "author": "Mel Michael <mel.michael007@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server --port 9000"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "dependencies": {
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "css-loader": "^2.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
+}
