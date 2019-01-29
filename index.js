@@ -29,13 +29,7 @@ class App extends React.Component {
 
   getWeather() {
     console.log(this.state.cityName);
-    // fetch(`${currentWeatherUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}`)
-    const current = `${currentWeatherUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}`;
-    const line = `${forecastUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}&cnt=5`;
-    console.log(line);
-
-    // fetch(`${forecastUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}&cnt=5`)
-    fetch(current)
+    fetch(`${currentWeatherUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}`)
       .then(response => response.json())
       .then(myJson => {
         console.log(myJson);
@@ -47,21 +41,51 @@ class App extends React.Component {
       <Router>
         <div className="content">
           <Header />
-          <Home 
-            handleChange={this.handleChange} 
+          <Home
+            handleChange={this.handleChange}
             getWeather={this.getWeather}
             cityName={this.state.cityName}
           />
-          <Route path="/forecast" component={Forecast} />
+          <Route
+            path="/forecast"
+            render={props => <Forecast {...props} extra={this.state.cityName} />}
+          />
         </div>
       </Router>
     );
   }
 }
 
+// const Forecast = () => (<h3>Forecast Page</h3>);
 
-const Forecast = () => (<h3>Forecast Page</h3>);
+class Forecast extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      forecasts: null
+    }
+  }
 
+  componentDidMount() {
+    fetch(`${forecastUrl}${this.props.extra}&type=accurate&APPID=${API_KEY}&cnt=5`)
+      .then(response => response.json())
+      .then(myJson => {
+        console.log(myJson);
+        this.setState({forecasts: myJson})
+      });
+  }
+
+  render() {
+    const { forecasts } = this.state;
+    if (!forecasts) {
+      return <h2>Loading...</h2>
+    } else {
+      return (
+        <h3>Forecast Page for {this.state.forecasts.city.name}</h3>
+      );
+    }
+  }
+}
 
 const Home = (props) => (
   <div className="main">
@@ -69,16 +93,11 @@ const Home = (props) => (
     <input type="text" onChange={props.handleChange} value={props.cityName} /> <br />
     <div>
       <button onClick={props.getWeather} style={{ marginRight: 20 }}>Get Current Weather</button>
-      {/* <button onClick={this.getWeather}>Get Forecast</button> */}
       <Link to="/forecast">
-        <button type="button">
-          Get Forecast
-        </button>
+        <button type="button">Get Forecast</button>
       </Link>
     </div>
   </div>
 );
 
 ReactDOM.render(<App />, document.getElementById('app-root'));
-
-
