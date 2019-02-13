@@ -73,28 +73,41 @@ class App extends React.Component {
 }
 
 
-
 class Forecast extends React.Component {
   constructor(props) {
     super(props);
-    // console.log('fore', props)
-    // this.state = {
-    //   forecast: ''
-    // }
+    this.state = {
+      forecast: null,
+      city: ''
+    }
   }
+
   componentDidMount() {
     this.props.getForecast().then(data => {
-      console.log('data ', data)
+      this.setState({
+        city: `${data.city.name}, ${data.city.country}`,
+        forecast: data.list
+      });
     });
-    // this.setState({forecast: })
   }
+
   render() {
-    // console.log('forecast: ', this.props, this.state)
-    if(this.props.coord) {
-      return (<h3>Forecast Page</h3>);
-    } else {
+    console.log('forecast: ', this.props, this.state);
+    const { forecast, city } = this.state;
+    if(!forecast) {
       return <Loading />;
     }
+    
+    return (
+      <div>
+        <h3>{city}</h3>
+        {
+          forecast.map(cast => {
+            return <Weather details={cast} key={cast.dt} />
+          })
+        }
+      </div>
+    );
   }
 }
 
@@ -102,6 +115,32 @@ class Forecast extends React.Component {
 const Loading = () => {
   return (
     <h2 style={{textAlign: 'center'}}>Loading...</h2>
+  )
+}
+
+var daysMap = { "0":"Sun", "1":"Mon", "2":"Tue", "3":"Wed", "4":"Thu", "5":"Fri", "6":"Sat" };
+
+var monthsMap = { "0":"Jan", "1":"Feb", "2":"Mar", "3":"Apr", "4":"May", "5":"June", "6":"July", "7":"Aug", "8":"Sept", "9":"Oct", "10":"Nov", "11":"Dec" };
+
+function getDate (unixTimestmap) {
+  var date = new Date(unixTimestmap * 1000);
+  var day = daysMap[date.getDay()];
+  var month = monthsMap[date.getMonth()] + ' ' + date.getDate();
+  return day + ', ' + month;
+}
+
+const Weather = (props) => {
+  console.log('props', props);
+  const { humidity, pressure, speed, weather, dt } = props.details;
+  return (
+    <ul style={{display: 'inline-block'}}>
+      {/* <img src="" /> */}
+      <li>{weather[0].main} (<small><em>{weather[0].description}</em></small>)</li>
+      <li>{getDate(dt)}</li>
+      <li>Pressure: {pressure}</li>
+      <li>Speed: {speed}</li>
+      <li>Humidity: {humidity}</li>
+    </ul>
   )
 }
 
