@@ -30,13 +30,7 @@ class App extends React.Component {
 
   getWeather() {
     console.log(this.state.cityName);
-    // fetch(`${currentWeatherUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}`)
-    const current = `${currentWeatherUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}`;
-    const line = `${forecastUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}&cnt=5`;
-    console.log(line);
-
-    // fetch(`${forecastUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}&cnt=5`)
-    fetch(current)
+    fetch(`${currentWeatherUrl}${this.state.cityName}&type=accurate&APPID=${API_KEY}`)
       .then(response => response.json())
       .then(myJson => {
         console.log(myJson);
@@ -64,14 +58,20 @@ class App extends React.Component {
       <Router>
         <div className="content">
           <Header />
-          <Route exact path="/" render={props => <Home {...props} {...customProps}/>} />
-          <Route path="/forecast" render={props => <Forecast {...props} {...customProps}/>} />
+          <Route 
+            exact path="/" 
+            render={props => <Home {...props} {...customProps}/>} 
+          />
+          <Route path="/forecast" 
+            render={props => <Forecast {...props} {...customProps}/>} 
+          />
         </div>
       </Router>
     );
   }
 }
 
+// const Forecast = () => (<h3>Forecast Page</h3>);
 
 class Forecast extends React.Component {
   constructor(props) {
@@ -159,5 +159,3 @@ const Home = (props) => (
 );
 
 ReactDOM.render(<App />, document.getElementById('app-root'));
-
-
